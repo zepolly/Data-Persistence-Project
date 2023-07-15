@@ -4,10 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
+using System.IO;
 
 public class MainManager : MonoBehaviour
 {
+
     public Text namePlayer;
 
     public Brick BrickPrefab;
@@ -15,16 +16,24 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text ScoreBest;
     public GameObject GameOverText;
 
     private bool m_Started = false;
-    private int m_Points;
-
+    private int pointBest = 0;
+    private int pointNow = 0;
+    private string m_Name;
     private bool m_GameOver = false;
-    // Start is called before the first frame update
+
+
     void Start()
     {
-        namePlayer.text = MainMenu.Instance.userName;
+        m_Name = MainMenu.Instance.userName;
+        pointBest = MainMenu.Instance.scoreBest;
+
+        namePlayer.text = "Name: " + m_Name;
+        ScoreText.text = "Score: " + pointNow;
+        ScoreBest.text = "Best Score: " + pointBest;
 
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
@@ -68,13 +77,31 @@ public class MainManager : MonoBehaviour
 
     void AddPoint(int point)
     {
-        m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        pointNow += point;
+
+        ScoreText.text = $"Score: {pointNow}";
+        
+    }
+
+    void SavePoints()
+    {
+        if (pointNow > pointBest)
+        {
+            pointBest = pointNow;
+            MainMenu.Instance.scoreBest = pointBest;
+        }
     }
 
     public void GameOver()
     {
+        SavePoints();
         m_GameOver = true;
         GameOverText.SetActive(true);
+        pointNow = 0;
+    }
+
+    public void Exit()
+    {
+        SceneManager.LoadScene(0);
     }
 }
