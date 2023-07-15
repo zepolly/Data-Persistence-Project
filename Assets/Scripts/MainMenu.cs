@@ -9,37 +9,18 @@ public class MainMenu : MonoBehaviour
 
     public static MainMenu Instance;
 
-    public InputField inputField;
-    public string userName;
+    public string PlayerName;
 
-    public string nameBest;
-
-    public int scoreBest;
+    public int Score;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            DontDestroyOnLoad(gameObject);
-            Instance = this;
-        }
-        else
+        //we don`t actually need this if statement because when we are in the Main Scene we can`t return to the Start Menu Scene where the Player Data Handle Object already exists.
+        if (Instance != null)
         {
             Destroy(gameObject);
         }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
-
-    public void StartNew()
-    {
-        SceneManager.LoadScene(1);
-        SaveNameInput();
-    }
-    public void SaveNameInput()
-    {
-        if (userName != inputField.text)
-        {
-            userName = inputField.text;
-        }
-    }
-
 }
